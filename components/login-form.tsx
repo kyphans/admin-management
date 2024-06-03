@@ -1,22 +1,21 @@
 'use client';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
 import Image from 'next/image';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
 
 const formSchema = z.object({
   email: z.string().email("That doesn't look like an email address"),
@@ -24,6 +23,33 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const [loading, setLoading] = useState({
+    google: false,
+    github: false
+  });
+  
+  const handleSubmit = async (method: string) => {
+    try {
+      setLoading(()=>{
+        return {
+          ...loading,
+          [method]: true
+        }
+      });
+      await signIn(method);
+    }
+    finally {
+      setLoading(()=>{
+        return {
+          ...loading,
+          [method]: false
+        }
+      
+      });
+    }
+
+  };
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -106,15 +132,27 @@ export function LoginForm() {
                 <Button
                   className='w-full'
                   variant='outline'
-                  onClick={(e) => e.preventDefault()}>
-                  Login with Google
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSubmit('google');
+                  }}>
+                  {loading['google'] ? 'Loading...' : 'Login with Google'}
+                </Button>
+                <Button
+                  className='w-full'
+                  variant='outline'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSubmit('github');
+                  }}>
+                  {loading['github'] ? 'Loading...' : 'Login with GitHub'}
                 </Button>
               </div>
             </form>
           </Form>
           <div className='mt-4 text-center text-sm'>
             {"Don't have an account? "}
-            <Link className='underline' href='#'>
+            <Link className='underline' href='/sign-up'>
               Sign up
             </Link>
           </div>

@@ -7,7 +7,6 @@ function AuthLayout({
 }>) {
   return (
     <div>
-      <div className='w-full bg-blue-600 text-white'>Auth layout</div>
       {children}
     </div>
   );
