@@ -1,69 +1,16 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { SheetTrigger, SheetContent, Sheet } from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
 import { auth } from '@/auth';
+import Sidebar from '@/components/navbar/sidebar';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import UserInfoSettings from '@/components/user-info-setting';
 import { type Session } from 'next-auth';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
-
-type SideBarItem = Readonly<{
-  href: string;
-  icon: React.FC<{ className: string }>;
-  label: React.ReactNode;
-  badge?: number;
-  className?: string;
-}>;
-
-const sideBarItems: SideBarItem[] = [
-  { href: '#', icon: HomeIcon, label: 'Dashboard' },
-  { href: '#', icon: ShoppingCartIcon, label: 'Orders', badge: 6 },
-  {
-    href: '#',
-    icon: PackageIcon,
-    label: 'Products',
-    className: 'bg-muted text-primary'
-  },
-  { href: '#', icon: UsersIcon, label: 'Customers' },
-  { href: '#', icon: LineChartIcon, label: 'Analytics' }
-];
-
-const Sidebar = ({ isMobileView }: { isMobileView?: boolean }) => {
-  return (
-    <nav
-      className={
-        isMobileView
-          ? 'grid gap-2 text-lg font-medium'
-          : 'grid items-start px-2 text-sm font-medium lg:px-4'
-      }>
-      {sideBarItems.map(({ href, icon: Icon, label, badge, className }, index) => (
-        <Link
-          key={index}
-          className={cn(
-            isMobileView
-              ? 'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground'
-              : 'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
-            ,className
-          )}
-          href={href}>
-          <Icon className='h-4 w-4' />
-          {label}
-          {!!badge && (
-            <Badge className='ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full'>
-              {badge}
-            </Badge>
-          )}
-        </Link>
-      ))}
-    </nav>
-  );
-};
 
 const Logo = () => {
   return (
-    <Link className='flex items-center gap-2 font-semibold' href='#'>
+    <Link className='flex items-center gap-2 font-semibold' href='/'>
       <Package2Icon className='h-6 w-6' />
       <span className=''>Acme Inc</span>
     </Link>
@@ -87,7 +34,7 @@ export default async function RoutesLayout({
       <div className='hidden border-r bg-muted/40 md:block'>
         <div className='flex h-full max-h-screen flex-col gap-2'>
           <div className='flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6'>
-            <Logo />
+              <Logo />
           </div>
           <div className='flex-1'>
             <Sidebar />
@@ -126,88 +73,11 @@ export default async function RoutesLayout({
               </div>
             </form>
           </div>
-          <UserInfoSettings data={session?.user}/>
+          <UserInfoSettings data={session?.user} />
         </header>
         <main>{children}</main>
       </div>
     </div>
-  );
-}
-
-function BellIcon(props: { className?: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'>
-      <path d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9' />
-      <path d='M10.3 21a1.94 1.94 0 0 0 3.4 0' />
-    </svg>
-  );
-}
-
-function CircleUserIcon(props: { className?: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'>
-      <circle cx='12' cy='12' r='10' />
-      <circle cx='12' cy='10' r='3' />
-      <path d='M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662' />
-    </svg>
-  );
-}
-
-function HomeIcon(props: { className?: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'>
-      <path d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' />
-      <polyline points='9 22 9 12 15 12 15 22' />
-    </svg>
-  );
-}
-
-function LineChartIcon(props: { className?: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'>
-      <path d='M3 3v18h18' />
-      <path d='m19 9-5 5-4-4-3 3' />
-    </svg>
   );
 }
 
@@ -251,27 +121,6 @@ function Package2Icon(props: { className?: string }) {
   );
 }
 
-function PackageIcon(props: { className?: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'>
-      <path d='m7.5 4.27 9 5.15' />
-      <path d='M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z' />
-      <path d='m3.3 7 8.7 5 8.7-5' />
-      <path d='M12 22V12' />
-    </svg>
-  );
-}
-
 function SearchIcon(props: { className?: string }) {
   return (
     <svg
@@ -287,47 +136,6 @@ function SearchIcon(props: { className?: string }) {
       strokeLinejoin='round'>
       <circle cx='11' cy='11' r='8' />
       <path d='m21 21-4.3-4.3' />
-    </svg>
-  );
-}
-
-function ShoppingCartIcon(props: { className?: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'>
-      <circle cx='8' cy='21' r='1' />
-      <circle cx='19' cy='21' r='1' />
-      <path d='M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12' />
-    </svg>
-  );
-}
-
-function UsersIcon(props: { className?: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'>
-      <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-      <circle cx='9' cy='7' r='4' />
-      <path d='M22 21v-2a4 4 0 0 0-3-3.87' />
-      <path d='M16 3.13a4 4 0 0 1 0 7.75' />
     </svg>
   );
 }

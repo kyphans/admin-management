@@ -13,7 +13,7 @@ import prisma from "./lib/prisma"
  *                              Creating a database adapter [https://authjs.dev/guides/creating-a-database-adapter]
  * @property {Object} callbacks - Callback functions for various authentication events.
  */
-const config: NextAuthConfig = {
+export const config: NextAuthConfig = {
   providers: [GitHub, Google],
   adapter: PrismaAdapter(prisma),
   callbacks: {
